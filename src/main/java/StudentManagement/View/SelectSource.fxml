@@ -7,12 +7,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="StudentManagement.View.SelectSourceController">
     <children>
         <VBox fillWidth="false">
             <children>
-                <RadioButton mnemonicParsing="false" text="Text File">
+                <RadioButton fx:id="textFileRadioBtn" mnemonicParsing="false" text="Text File">
                     <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                     </VBox.margin>
@@ -23,7 +22,7 @@
                         <Font size="14.0" />
                     </font>
                 </RadioButton>
-                <RadioButton mnemonicParsing="false" text="Database" toggleGroup="$ToggleGroup1">
+                <RadioButton fx:id="databaseRadioBtn" mnemonicParsing="false" text="Database" toggleGroup="$ToggleGroup1">
                     <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                     </VBox.margin>
@@ -33,7 +32,7 @@
                 </RadioButton>
             </children>
         </VBox>
-        <Button mnemonicParsing="false" text="Next">
+        <Button fx:id="nextBtn" mnemonicParsing="false" onAction="#handleSceneProcess" text="Next">
             <VBox.margin>
                 <Insets bottom="10.0" top="10.0" />
             </VBox.margin>

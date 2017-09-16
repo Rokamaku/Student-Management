@@ -1,7 +1,8 @@
-package View;
+package StudentManagement.View;
 
-import Model.Student;
-import Util.DateUtil;
+import StudentManagement.Model.Student;
+import StudentManagement.Util.DateUtil;
+import StudentManagement.View.TextFile.TextSourceManagement;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -13,14 +14,12 @@ public class StudentOverviewController {
     @FXML
     private TableView<Student> studentTable;
     @FXML
+    private TableColumn<Student, String> idCol;
+    @FXML
     private TableColumn<Student, String> fNameCol;
     @FXML
     private TableColumn<Student, String> lNameCol;
 
-    @FXML
-    private Label fNameLabel;
-    @FXML
-    private Label lNameLabel;
     @FXML
     private Label genderLabel;
     @FXML
@@ -37,23 +36,32 @@ public class StudentOverviewController {
     private Label GPALabel;
 
 
-    private View.MainApp mainApp;
+    private TextSourceManagement mainScene;
 
     public StudentOverviewController() {
     }
 
     @FXML
     private void initialize() {
+        idCol.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         fNameCol.setCellValueFactory(cellData -> cellData.getValue().fNameProperty());
         lNameCol.setCellValueFactory(cellData -> cellData.getValue().lNameProperty());
 
         showStudentDetails(null);
+
+        studentTable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showStudentDetails(newValue));
+    }
+
+    public void setMainApp(TextSourceManagement mainScene) {
+        this.mainScene = mainScene;
+
+        // Add observable list data to the table
+        studentTable.setItems(mainScene.getStudentsData());
     }
 
     private void showStudentDetails(Student student) {
         if (student != null) {
-            fNameLabel.setText(student.getfName());
-            lNameLabel.setText(student.getlName());
             genderLabel.setText(student.getGender());
             DOBLabel.setText(DateUtil.format(student.getDOB()));
             addressLabel.setText(student.getAddress());
@@ -63,8 +71,6 @@ public class StudentOverviewController {
             GPALabel.setText(Float.toString(student.getGPA()));
         }
         else {
-            fNameLabel.setText("");
-            lNameLabel.setText("");
             genderLabel.setText("");
             DOBLabel.setText("");
             addressLabel.setText("");
@@ -75,11 +81,13 @@ public class StudentOverviewController {
         }
     }
 
+    @FXML
     private void handleNewStudent() {
-        Person tempPerson = new Student;
-        boolean okClicked = mainApp.showPersonEditDialog(tempPerson);
+        Student tempStudent = new Student();
+        tempStudent.setId(Student.createNewStudentId(mainScene.getStudentsData()));
+        boolean okClicked = mainScene.showStudentEditDialog(tempStudent);
         if (okClicked) {
-            mainApp.getPersonData().add(tempPerson);
+            mainScene.getStudentsData().add(tempStudent);
         }
     }
 
@@ -89,14 +97,32 @@ public class StudentOverviewController {
         if (selectedIndex >= 0) {
             studentTable.getItems().remove(selectedIndex);
         } else {
-            // Nothing selected.
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initOwner(mainApp.getPrimaryStage());
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Person Selected");
-            alert.setContentText("Please select a person in the table.");
-
-            alert.showAndWait();
+            handleNoSelection();
         }
+    }
+
+    @FXML
+    private void handleEditStudent() {
+        Student selectedPerson = studentTable.getSelectionModel().getSelectedItem();
+        if (selectedPerson != null) {
+            boolean okClicked = mainScene.showStudentEditDialog(selectedPerson);
+            if (okClicked) {
+                showStudentDetails(selectedPerson);
+            }
+
+        } else {
+            handleNoSelection();
+        }
+    }
+
+    private void handleNoSelection() {
+        // Nothing selected.
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.initOwner(mainScene.getPrimaryStage());
+        alert.setTitle("No Selection");
+        alert.setHeaderText("No Person Selected");
+        alert.setContentText("Please select a person in the table.");
+
+        alert.showAndWait();
     }
 }

@@ -1,6 +1,6 @@
-package DataAccess;
+package StudentManagement.DataAccess;
 
-import Model.Student;
+import StudentManagement.Model.Student;
 
 import java.util.ArrayList;
 

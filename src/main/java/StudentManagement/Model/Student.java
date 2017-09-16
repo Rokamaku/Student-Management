@@ -1,9 +1,11 @@
-package Model;
+package StudentManagement.Model;
 
+import StudentManagement.Util.LocalDateAdapter;
 import javafx.beans.property.*;
 
-import java.io.Serializable;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Student {
 
@@ -18,23 +20,48 @@ public class Student {
     private final StringProperty classCode;
     private final FloatProperty GPA;
 
-    public Student(StringProperty id, StringProperty fName,
-                   StringProperty lName, ObjectProperty<LocalDate> DOB,
-                   StringProperty gender, StringProperty phone,
-                   StringProperty email, StringProperty address,
-                   StringProperty classCode, FloatProperty GPA) {
-        this.id = id;
-        this.fName = fName;
-        this.lName = lName;
-        this.DOB = DOB;
-        this.gender = gender;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
-        this.classCode = classCode;
-        this.GPA = GPA;
+    public Student() {
+        this(null, null, null, null, null,
+                null, null, null, null, 0f);
     }
 
+    public Student(String id, String fName,
+                   String lName, LocalDate DOB,
+                   String gender, String phone,
+                   String email, String address,
+                   String classCode, Float GPA) {
+
+        this.id = new SimpleStringProperty(id);
+        this.fName = new SimpleStringProperty(fName);
+        this.lName = new SimpleStringProperty(lName);
+        this.DOB = new SimpleObjectProperty<>(DOB);
+        this.gender = new SimpleStringProperty(gender);
+        this.phone = new SimpleStringProperty(phone);
+        this.email = new SimpleStringProperty(email);
+        this.address = new SimpleStringProperty(address);
+        this.classCode = new SimpleStringProperty(classCode);
+        this.GPA = new SimpleFloatProperty(GPA);
+    }
+
+    public static String createNewStudentId(List<Student> students) {
+        String newId = "";
+        String strYear = Integer.toString(LocalDate.now().getYear());
+        String yearCode = strYear.substring(strYear.length() - 2, strYear.length());
+        String newIdMark = "";
+        if (students.size() == 0) {
+            newIdMark = "0000";
+        }
+        else {
+            String lastStudentId = students.get(students.size() - 1).getId();
+            int idMark = Integer.parseInt(lastStudentId.substring(
+                    lastStudentId.length() - 4, lastStudentId.length()));
+            newIdMark = Integer.toString(++idMark);
+            for (int i = newIdMark.length(); i < 4; i++) {
+                newIdMark = "0" + newIdMark;
+            }
+        }
+        return yearCode + "52" + newIdMark;
+    }
 
     public float getGPA() {
         return GPA.get();
@@ -60,6 +87,7 @@ public class Student {
         this.fName.set(fName);
     }
 
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public LocalDate getDOB() {
         return DOB.get();
     }

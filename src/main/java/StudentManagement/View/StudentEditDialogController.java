@@ -1,17 +1,21 @@
-package View;
+package StudentManagement.View;
 
-import Model.Student;
-import com.sun.deploy.util.StringUtils;
+import StudentManagement.Model.Student;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.util.regex.Pattern;
 
 
 public class StudentEditDialogController {
 
+    @FXML
+    private TextField idField;
     @FXML
     private TextField fNameField;
     @FXML
@@ -43,12 +47,13 @@ public class StudentEditDialogController {
         this.dialogStage = dialogStage;
 
         // Set the dialog icon.
-//        this.dialogStage.getIcons().add(new Image("file:resources/images/edit.png"));
+        this.dialogStage.getIcons().add(new Image("file:resources/images/edit.png"));
     }
 
-    public void setPerson(Student student) {
+    public void setStudent(Student student) {
         this.student = student;
 
+        idField.setText(student.getId());
         fNameField.setText(student.getfName());
         lNameField.setText(student.getlName());
         genderBox.getSelectionModel().select(student.getGender());
@@ -90,15 +95,15 @@ public class StudentEditDialogController {
         if (lNameField.getText() == null || lNameField.getText().length() == 0)
             errorMsg += "Invalid last name!\n";
         if (addressField.getText() == null || addressField.getText().length() == 0)
-            errorMsg += "Invalid address";
+            errorMsg += "Invalid address!\n";
         if (phoneField.getText() == null || addressField.getText().length() == 0)
-            errorMsg += "Invalid phone number";
+            errorMsg += "Invalid phone number!\n";
         if (emailField.getText() == null || emailField.getText().length() == 0)
-            errorMsg += "Invalid email";
+            errorMsg += "Invalid email!\n";
         if (classField.getText() == null || classField.getText().length() == 0)
-            errorMsg += "Invalid class";
-        if (GPAField.getText() == null || !GPAField.getText().chars().allMatch(Character::isDigit))
-            errorMsg += "Invalid number";
+            errorMsg += "Invalid class!\n";
+        if (GPAField.getText() == null || !isFloat(GPAField.getText()))
+            errorMsg += "Invalid number!\n";
         if (errorMsg.length() == 0)
             return true;
         else {
@@ -114,11 +119,19 @@ public class StudentEditDialogController {
         }
     }
 
-    /**
-     * Called when the user clicks cancel.
-     */
     @FXML
     private void handleCancel() {
         dialogStage.close();
+    }
+
+    private static final Pattern DOUBLE_PATTERN = Pattern.compile(
+            "[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)" +
+                    "([eE][+-]?(\\p{Digit}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{Digit}+))?)|" +
+                    "(((0[xX](\\p{XDigit}+)(\\.)?)|(0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))" +
+                    "[pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*");
+
+    public static boolean isFloat(String s)
+    {
+        return DOUBLE_PATTERN.matcher(s).matches();
     }
 }

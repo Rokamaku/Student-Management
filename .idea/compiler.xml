@@ -10,6 +10,7 @@
       <entry name="!?*.flex" />
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
+      <entry name="!?*.png" />
     </wildcardResourcePatterns>
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -20,7 +21,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="StudentManagement" target="1.7" />
+      <module name="StudentManagement" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
