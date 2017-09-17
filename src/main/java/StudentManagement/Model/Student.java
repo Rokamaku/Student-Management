@@ -21,8 +21,16 @@ public class Student {
     private final FloatProperty GPA;
 
     public Student() {
-        this(null, null, null, null, null,
-                null, null, null, null, 0f);
+        this.id = new SimpleStringProperty();
+        this.fName = new SimpleStringProperty();
+        this.lName = new SimpleStringProperty();
+        this.DOB = new SimpleObjectProperty<>();
+        this.gender = new SimpleStringProperty();
+        this.phone = new SimpleStringProperty();
+        this.email = new SimpleStringProperty();
+        this.address = new SimpleStringProperty();
+        this.classCode = new SimpleStringProperty();
+        GPA = new SimpleFloatProperty();
     }
 
     public Student(String id, String fName,

@@ -14,7 +14,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         MainApp.primaryStage = primaryStage;
-        MainApp.primaryStage.getIcons().add(new Image("images/if_07_Note_Book_2064482.png"));
+        MainApp.primaryStage.getIcons().add(new Image("/images/if_07_Note_Book_2064482.png"));
         Parent root = FXMLLoader.load(getClass().getResource("/StudentManagement/View/SelectSource.fxml"));
         primaryStage.setTitle("Select Source");
         primaryStage.setScene(new Scene(root, 300, 275));

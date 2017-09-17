@@ -1,5 +1,6 @@
 package StudentManagement.View;
 
+import StudentManagement.View.Database.DatabaseSourceManagement;
 import StudentManagement.View.TextFile.TextSourceManagement;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -27,6 +28,8 @@ public class SelectSourceController {
     }
 
     private void createDatabaseSourceScene() {
+        DatabaseSourceManagement databaseSourceManagement = new DatabaseSourceManagement();
+        databaseSourceManagement.start();
     }
 
 }

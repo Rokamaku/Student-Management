@@ -19,7 +19,7 @@ public class RootLayoutController {
 
     @FXML
     private void handleNew() {
-        mainScene.getStudentsData().clear();
+        mainScene.getStudents().clear();
         mainScene.setStudentFilePath(null);
     }
 
@@ -82,7 +82,7 @@ public class RootLayoutController {
     }
 
     @FXML
-    private void handleExit() {
+    private void handleClose() {
         System.exit(0);
     }
 }

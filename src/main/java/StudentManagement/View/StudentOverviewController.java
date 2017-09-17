@@ -2,7 +2,6 @@ package StudentManagement.View;
 
 import StudentManagement.Model.Student;
 import StudentManagement.Util.DateUtil;
-import StudentManagement.View.TextFile.TextSourceManagement;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -36,7 +35,7 @@ public class StudentOverviewController {
     private Label GPALabel;
 
 
-    private TextSourceManagement mainScene;
+    private SourceManagement mainScene;
 
     public StudentOverviewController() {
     }
@@ -53,11 +52,11 @@ public class StudentOverviewController {
                 (observable, oldValue, newValue) -> showStudentDetails(newValue));
     }
 
-    public void setMainApp(TextSourceManagement mainScene) {
+    public void setMainScene(SourceManagement mainScene) {
         this.mainScene = mainScene;
 
         // Add observable list data to the table
-        studentTable.setItems(mainScene.getStudentsData());
+        studentTable.setItems(mainScene.getStudents());
     }
 
     private void showStudentDetails(Student student) {
@@ -84,10 +83,11 @@ public class StudentOverviewController {
     @FXML
     private void handleNewStudent() {
         Student tempStudent = new Student();
-        tempStudent.setId(Student.createNewStudentId(mainScene.getStudentsData()));
+        tempStudent.setId(Student.createNewStudentId(mainScene.getStudents()));
         boolean okClicked = mainScene.showStudentEditDialog(tempStudent);
         if (okClicked) {
-            mainScene.getStudentsData().add(tempStudent);
+            mainScene.addStudent(tempStudent);
+            studentTable.getItems().add(tempStudent);
         }
     }
 
@@ -95,6 +95,7 @@ public class StudentOverviewController {
     private void handleDeletePerson() {
         int selectedIndex = studentTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
+            mainScene.delStudent(studentTable.getSelectionModel().getSelectedItem());
             studentTable.getItems().remove(selectedIndex);
         } else {
             handleNoSelection();
@@ -103,11 +104,12 @@ public class StudentOverviewController {
 
     @FXML
     private void handleEditStudent() {
-        Student selectedPerson = studentTable.getSelectionModel().getSelectedItem();
-        if (selectedPerson != null) {
-            boolean okClicked = mainScene.showStudentEditDialog(selectedPerson);
+        Student selectedStudent = studentTable.getSelectionModel().getSelectedItem();
+        if (selectedStudent != null) {
+            boolean okClicked = mainScene.showStudentEditDialog(selectedStudent);
+            mainScene.updateStudent(selectedStudent);
             if (okClicked) {
-                showStudentDetails(selectedPerson);
+                showStudentDetails(selectedStudent);
             }
 
         } else {
@@ -120,8 +122,8 @@ public class StudentOverviewController {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.initOwner(mainScene.getPrimaryStage());
         alert.setTitle("No Selection");
-        alert.setHeaderText("No Person Selected");
-        alert.setContentText("Please select a person in the table.");
+        alert.setHeaderText("No student Selected");
+        alert.setContentText("Please select a student in the table.");
 
         alert.showAndWait();
     }
